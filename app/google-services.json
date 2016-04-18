@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_id": "coursecritic-1283",
+    "project_number": "616431668276",
+    "name": "CourseCritic"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616431668276:android:27d689d63f1b7a06",
+        "client_id": "android:com.google.samples.quickstart.signin",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.google.samples.quickstart.signin",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616431668276-aoiffk4p60mqrtuqbr2o342nfn02pmei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.google.samples.quickstart.signin",
+            "certificate_hash": "B29E54A4245A08C76092851EC2844DB5A27256F3"
+          }
+        },
+        {
+          "client_id": "616431668276-a92ja3dkapj2sj4uu0epjoq0grtghq28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616431668276:android:8b946d544fd23695",
+        "client_id": "android:in.iiitd.pcsma.coursecritic",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "in.iiitd.pcsma.coursecritic",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616431668276-is6c78je3klk9qijps4b50mi9v1m27du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.iiitd.pcsma.coursecritic",
+            "certificate_hash": "B29E54A4245A08C76092851EC2844DB5A27256F3"
+          }
+        },
+        {
+          "client_id": "616431668276-a92ja3dkapj2sj4uu0epjoq0grtghq28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
