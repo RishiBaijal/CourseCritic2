@@ -35,6 +35,7 @@ public class SignInActivity extends AppCompatActivity implements
         View.OnClickListener {
 
     public String displayName = "";
+    public boolean receivedExternalIntent = false;
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -47,6 +48,20 @@ public class SignInActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            System.out.println("BUNDLE IS NOT NULL.");
+            String s = bundle.getString("signOut");
+            if (s != null) {
+                System.out.println("STRING VARIABLE IS NOT NULL");
+                if ((s.equals("pleaseSignOut"))) {
+                    System.out.println("THE CONDITION IS TRUE.");
+                    //receivedExternalIntent = true;
+                    signOut();
+                }
+            }
+        }
 
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
@@ -204,9 +219,11 @@ public class SignInActivity extends AppCompatActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-            Intent intent = new Intent(this, NavigationActivity.class);
-            intent.putExtra("displayName", displayName);
-            startActivity(intent);
+            if (receivedExternalIntent == false) {
+                Intent intent = new Intent(this, NavigationActivity.class);
+                intent.putExtra("displayName", displayName);
+                startActivity(intent);
+            }
         } else {
             mStatusTextView.setText(R.string.signed_out);
 

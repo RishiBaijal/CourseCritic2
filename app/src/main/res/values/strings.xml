@@ -50,4 +50,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_your_friends">YourFriendsActivity</string>
+    <string name="title_activity_your_courses">YourCoursesActivity</string>
+    <string name="title_activity_past_courses">PastCoursesActivity</string>
+    <string name="title_activity_top50">Top50Activity</string>
+    <string name="title_activity_recommendations">RecommendationsActivity</string>
 </resources>

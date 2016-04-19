@@ -1,5 +1,6 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -70,6 +71,13 @@ public class NavigationActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+//        if (id == R.id.main_menu)
+//        {
+//            //SignInActivity.receivedExternalIntent = true;
+//            Intent intent = new Intent(this, SignInActivity.class);
+//            intent.putExtra("signOut", "pleaseSignOut");
+//            startActivity(intent);
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -80,17 +88,24 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_friends) {
+            Intent intent = new Intent(this, YourFriendsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_your_courses) {
+            Intent intent = new Intent(this, YourCoursesActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        }  else if (id == R.id.nav_past_course) {
+            Intent intent = new Intent(this, PastCoursesActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_top_50) {
+            Intent intent = new Intent(this, Top50Activity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_recommendations) {
+            Intent intent = new Intent(this, RecommendationsActivity.class);
+            startActivity(intent);
 
         }
 
