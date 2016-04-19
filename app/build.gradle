@@ -25,6 +25,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
+    compile files('libs/rabbitmq-client.jar', 'libs/rabbitmq-client-tests.jar', 'libs/hamcrest-core.jar', 'libs/junit.jar', 'libs/mongo-java-driver-3.2.0-SNAPSHOT.jar')
+
 
 }
 apply plugin: 'com.google.gms.google-services'

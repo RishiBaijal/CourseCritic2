@@ -34,6 +34,8 @@ public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
+    public String displayName = "";
+
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -130,7 +132,8 @@ public class SignInActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            displayName = acct.getDisplayName();
+            mStatusTextView.setText(getString(R.string.signed_in_fmt, displayName));
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -201,6 +204,9 @@ public class SignInActivity extends AppCompatActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, NavigationActivity.class);
+            intent.putExtra("displayName", displayName);
+            startActivity(intent);
         } else {
             mStatusTextView.setText(R.string.signed_out);
 
