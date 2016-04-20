@@ -34,7 +34,7 @@ public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-    public String displayName = "";
+    public String displayName = "", email = "";
     public boolean receivedExternalIntent = false;
 
     private static final String TAG = "SignInActivity";
@@ -148,6 +148,7 @@ public class SignInActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             displayName = acct.getDisplayName();
+            email = acct.getEmail();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, displayName));
             updateUI(true);
         } else {
@@ -222,6 +223,7 @@ public class SignInActivity extends AppCompatActivity implements
             if (receivedExternalIntent == false) {
                 Intent intent = new Intent(this, NavigationActivity.class);
                 intent.putExtra("displayName", displayName);
+                intent.putExtra("email", email);
                 startActivity(intent);
             }
         } else {

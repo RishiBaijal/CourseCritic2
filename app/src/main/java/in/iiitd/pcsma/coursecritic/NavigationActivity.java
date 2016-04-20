@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,8 +41,21 @@ public class NavigationActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        Bundle bundle = getIntent().getExtras();
+        String username = bundle.getString("displayName");
+        String email = bundle.getString("email");
+
+//        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header_navigation);
+//        TextView textView1 = (TextView) findViewById(R.id.textView1);
+//        textView1.setText(username);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        TextView textView1 = (TextView) header.findViewById(R.id.textView1);
+        textView1.setText(username);
+        TextView textView2 = (TextView) header.findViewById(R.id.textView2);
+        textView2.setText(email);
     }
 
     @Override

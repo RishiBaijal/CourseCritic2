@@ -27,23 +27,23 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".YourFriendsActivity"
-            android:label="@string/title_activity_your_friends"
+            android:label="Your friends"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".YourCoursesActivity"
-            android:label="@string/title_activity_your_courses"
+            android:label="Your courses"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PastCoursesActivity"
-            android:label="@string/title_activity_past_courses"
+            android:label="Your past courses"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Top50Activity"
-            android:label="@string/title_activity_top50"
+            android:label="Top 50 courses"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RecommendationsActivity"
-            android:label="@string/title_activity_recommendations"
+            android:label="Your recommendations"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
