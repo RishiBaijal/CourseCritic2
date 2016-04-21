@@ -15,11 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public String username1 = "";
+    public String email1 = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,43 +34,24 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                finish();
-            }
-        });
-        final AlertDialog dialog = builder.create();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Suck my dick", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-                dialog.show();
-            }
-        });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Bundle bundle = getIntent().getExtras();
-        String username = bundle.getString("displayName");
-        String email = bundle.getString("email");
+
+
 
 //        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header_navigation);
 //        TextView textView1 = (TextView) findViewById(R.id.textView1);
 //        textView1.setText(username);
+        Bundle bundle = getIntent().getExtras();
+        final String username = bundle.getString("displayName");
+        final String email = bundle.getString("email");
+        email1 = email;
+        username1 = username;
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -73,6 +60,39 @@ public class NavigationActivity extends AppCompatActivity
         textView1.setText(username);
         TextView textView2 = (TextView) header.findViewById(R.id.textView2);
         textView2.setText(email);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Course");
+        builder.setMessage("Enter the course Id");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        final EditText input = new EditText(this);
+        input.setHint("Course ID");
+        builder.setView(input);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String course_id = input.getText().toString();
+                String colonSeparatedParam = username + ":" + email + ":" + course_id;
+
+                SaveCourseToDB saveCourseToDB = new SaveCourseToDB();
+                saveCourseToDB.execute(colonSeparatedParam);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+            }
+        });
     }
 
     @Override
@@ -122,21 +142,31 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_friends) {
             Intent intent = new Intent(this, YourFriendsActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
             startActivity(intent);
         } else if (id == R.id.nav_your_courses) {
             Intent intent = new Intent(this, YourCoursesActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
             startActivity(intent);
 
         }  else if (id == R.id.nav_past_course) {
             Intent intent = new Intent(this, PastCoursesActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
             startActivity(intent);
 
         } else if (id == R.id.nav_top_50) {
             Intent intent = new Intent(this, Top50Activity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
             startActivity(intent);
 
         } else if (id == R.id.nav_recommendations) {
             Intent intent = new Intent(this, RecommendationsActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
             startActivity(intent);
 
         }
