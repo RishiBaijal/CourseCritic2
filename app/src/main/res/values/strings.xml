@@ -55,4 +55,6 @@
     <string name="title_activity_past_courses">PastCoursesActivity</string>
     <string name="title_activity_top50">Top50Activity</string>
     <string name="title_activity_recommendations">RecommendationsActivity</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
