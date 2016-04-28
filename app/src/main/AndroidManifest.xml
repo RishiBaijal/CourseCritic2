@@ -44,6 +44,10 @@
         <activity
             android:name=".RecommendationsActivity"
             android:label="Your recommendations"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReviewActivity"
+            android:label="@string/title_activity_review"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -57,4 +57,5 @@
     <string name="title_activity_recommendations">RecommendationsActivity</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_review">ReviewActivity</string>
 </resources>
