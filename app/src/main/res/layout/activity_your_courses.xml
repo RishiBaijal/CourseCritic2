@@ -37,5 +37,16 @@
             android:textColor="#666"
             android:textSize="14dp" />
 
+        <Button
+            android:id="@+id/reviewButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseCode"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#666"
+            android:textSize="14dp"
+            android:onClick="addCourseReview" />
+void
     </RelativeLayout>
 </android.support.v7.widget.CardView>

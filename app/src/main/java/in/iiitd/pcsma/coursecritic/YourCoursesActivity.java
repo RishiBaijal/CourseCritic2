@@ -62,13 +62,22 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
     protected void onPause()
     {
         super.onPause();
         if(progressDialog != null)
             progressDialog.dismiss();
+    }
+
+    public void addCourseReview(View view)
+    {
 
     }
+
+
+
 
     public class GetCourseFromDB extends AsyncTask<String, Void, String> {
         @Override
