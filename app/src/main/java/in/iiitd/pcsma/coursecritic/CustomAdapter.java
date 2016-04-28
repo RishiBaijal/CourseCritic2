@@ -53,9 +53,9 @@ import java.util.ArrayList;
         TextView courseName = holder.courseName;
         TextView courseCode = holder.courseCode;
 
-        courseView.setText(dataSet.get(listPosition).getInstructorName());
-        courseName.setText(dataSet.get(listPosition).getCourseName());
-        courseCode.setText(dataSet.get(listPosition).getCourseCode());
+        courseView.setText("Instructor name: " + dataSet.get(listPosition).getInstructorName());
+        courseName.setText("Course Name: " + dataSet.get(listPosition).getCourseName());
+        courseCode.setText("Course code: " + dataSet.get(listPosition).getCourseCode());
     }
 
     @Override

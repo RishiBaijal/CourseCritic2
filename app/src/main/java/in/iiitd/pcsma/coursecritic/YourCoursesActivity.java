@@ -137,7 +137,8 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     public void addCourseReview(View view)
     {
-
+        Intent intent = new Intent(this, ReviewActivity.class);
+        startActivity(intent);
     }
 
     private class MyOnClickListener implements View.OnClickListener {
