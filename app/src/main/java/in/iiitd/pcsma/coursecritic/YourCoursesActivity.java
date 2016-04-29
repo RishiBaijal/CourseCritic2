@@ -14,7 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+
 import java.util.*;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -33,7 +35,6 @@ public class YourCoursesActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     HashSet<String> courseInfo = new HashSet<String>();
     static String courseNames[], courseCodes[], instructorNames[];
-
 
 
     private static RecyclerView.Adapter adapter;
@@ -67,7 +68,6 @@ public class YourCoursesActivity extends AppCompatActivity {
 //        TextView textView2 = (TextView) findViewById(R.id.courseCode);
 
 
-
         Bundle bundle = getIntent().getExtras();//String username = bundle.getString("username");
         String email = bundle.getString("email");
         // System.out.println("USERNAME:"  + username);
@@ -84,10 +84,9 @@ public class YourCoursesActivity extends AppCompatActivity {
 
             Iterator iterator = courseInfo.iterator();
             int c = 0;
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 String nextElement = (String) iterator.next();
-                StringTokenizer st = new StringTokenizer(nextElement);
+                StringTokenizer st = new StringTokenizer(nextElement, ";");
                 System.out.println("Next element: " + nextElement);
                 if (st.countTokens() == 3) {
                     String courseCode = st.nextToken();
@@ -108,7 +107,6 @@ public class YourCoursesActivity extends AppCompatActivity {
             }
 
 
-
             System.out.println("TEMPACC KI VALUE HAI: " + tempAcc);
             //StringTokenizer st = new StringTokenizer(tempAcc);
         } catch (InterruptedException e) {
@@ -117,8 +115,7 @@ public class YourCoursesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         System.out.println(courseInfo);
-        for (int i = 0; i < courseInfo.size(); i++)
-        {
+        for (int i = 0; i < courseInfo.size(); i++) {
             data.add(new DataModel(courseCodes[i], courseNames[i], instructorNames[i]));
         }
         adapter = new CustomAdapter(data);
@@ -128,15 +125,13 @@ public class YourCoursesActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
-        if(progressDialog != null)
+        if (progressDialog != null)
             progressDialog.dismiss();
     }
 
-    public void addCourseReview(View view)
-    {
+    public void addCourseReview(View view) {
         Intent intent = new Intent(this, ReviewActivity.class);
         startActivity(intent);
     }
@@ -176,12 +171,9 @@ public class YourCoursesActivity extends AppCompatActivity {
     }
 
 
-
-
     public class GetCourseFromDB extends AsyncTask<String, Void, String> {
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(YourCoursesActivity.this, "Fetching your courses", "Contacting the server. Please wait...", true, false);
 
@@ -189,8 +181,7 @@ public class YourCoursesActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... arg0) {
-            try
-            {
+            try {
                 String tempAcc = "";
                 String email = arg0[0];
                 MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
@@ -200,8 +191,7 @@ public class YourCoursesActivity extends AppCompatActivity {
                 BasicDBObject searchQuery = new BasicDBObject();
                 searchQuery.put("email", email);
                 DBCursor dbCursor = newcollection.find(searchQuery);
-                while (dbCursor.hasNext())
-                {
+                while (dbCursor.hasNext()) {
                     DBObject dbObject = dbCursor.next();
                     String course_id = (String) dbObject.get("course_id");
                     System.out.println("COURSE ID: " + course_id);
@@ -215,25 +205,25 @@ public class YourCoursesActivity extends AppCompatActivity {
                         DBObject dbObject1 = dbCursor1.next();
                         String course_name = (String) dbObject1.get("course_name");
                         String course_instructor = (String) dbObject1.get("course_instructor");
-                        tempAcc = course_id + " " + course_name + " " + course_instructor;
+                        tempAcc = course_id + ";" + course_name + ";" + course_instructor;
                         System.out.println("THE VALUE OF TEMPACC IS: " + tempAcc);
                     }
                     //tempAcc = tempAcc + ";";
-                    courseInfo.add(tempAcc);
+                    if (!(tempAcc.equals("")))
+                        courseInfo.add(tempAcc);
 
                 }
                 return tempAcc;
 
 
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "NULLA";
             }
         }
+
         @Override
-        protected void onPostExecute(String result){
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
         }

@@ -46,6 +46,27 @@
 
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/spinner_title"
+        />
+
+
+
+    <EditText
+        android:id = "@+id/hiddenEditText"
+        android:layout_height="wrap_content"
+        android:layout_width = "match_parent"
+        android:hint="Other"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id = "@+id/visibleEditText"
+        android:layout_height="wrap_content"
+        android:hint="Answer the question here.."
+        android:layout_width = "match_parent" />
 </LinearLayout>
 
 
