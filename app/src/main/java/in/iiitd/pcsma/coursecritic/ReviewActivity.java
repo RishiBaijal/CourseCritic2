@@ -45,7 +45,7 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
 
     //String answerArray[] = new String[8];
     String answer = "", question = "";
-    static String email = "";
+    static String email = "", courseCode = "";
     static String other = "";
 
     @Override
@@ -55,11 +55,12 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
 
         Bundle bundle = getIntent().getExtras();
         email = bundle.getString("email");
+        courseCode = bundle.getString("currentCourseCode");
         System.out.println("The value of email is: " + email);
+        System.out.println("The value of courseCode cocksucka is (from ReviewActivity): " + courseCode);
 
         addListenerOnRatingBar();
         addListenerOnButton();
-/*
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> questionList = new ArrayList<String>();
@@ -74,7 +75,7 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, questionList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        */
+
 
 
 
@@ -173,16 +174,27 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
             try
             {
                 String questionAns = arg0[0];
-                System.out.println("STUDENT INFO: " + questionAns);
                 MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
                 MongoClient client = new MongoClient(uri);
+
                 DB db = client.getDB(uri.getDatabase());
                 DBCollection newcollection = db.getCollection("review_collection");
+                System.out.println("STUDENT INFO: " + questionAns);
+
                 StringTokenizer st = new StringTokenizer(questionAns, ";");
                 String question = st.nextToken();
                 String answer = st.nextToken();
+                System.out.println("QUESTION" + question);
+                System.out.println("Answer cocksucka:"  +answer);
+                System.out.println("CourseCode cocksucka" + courseCode);
+                StringTokenizer st1 = new StringTokenizer(courseCode, ":");
+                String token1 = st1.nextToken();
+                String token2 = st1.nextToken();
+                System.out.println("TOKEN 2: " + token2);
                 BasicDBObject alphaDoc = new BasicDBObject();
                 alphaDoc.put("Email", email);
+                System.out.println("EMAIL:"+email);
+                alphaDoc.put("courseCode", token2);
                 alphaDoc.put("question", question);
                 alphaDoc.put("answer", answer);
                 newcollection.insert(alphaDoc);
@@ -195,6 +207,12 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
                 return false;
             }
         }
+//        @Override
+//        protected void onPostExecute()
+//        {
+//            Toast.makeText(ReviewActivity.this, "Written successfully to database.", Toast.LENGTH_SHORT).show();
+//
+//        }
 //
 //    protected void onProgressUpdate(Integer... progress) {
 //        setProgressPercent(progress[0]);

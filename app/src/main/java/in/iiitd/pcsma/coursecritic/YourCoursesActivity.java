@@ -32,6 +32,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
+import org.w3c.dom.Text;
+
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
@@ -53,7 +55,7 @@ public class YourCoursesActivity extends AppCompatActivity {
     static View.OnClickListener myOnClickListener;
     private static ArrayList<Integer> removedItems;
 
-    static String email = "";
+    static String email = "", currentCourseCode = "";
 
 
     @Override
@@ -108,9 +110,9 @@ public class YourCoursesActivity extends AppCompatActivity {
                     c++;
                 }
             }
-            c = 0;
+          //  c = 0;
             int i;
-            for (i = 0; i < 3; i++) {
+            for (i = 0; i < c; i++) {
                 System.out.println("Course code array element #: " + i + " " + courseCodes[i]);
                 System.out.println("Course Names array element #: " + i + " " + courseNames[i]);
                 System.out.println("Instructor names array element #: " + i + " " + instructorNames[i]);
@@ -130,6 +132,7 @@ public class YourCoursesActivity extends AppCompatActivity {
         }
         adapter = new CustomAdapter(data);
         recyclerView.setAdapter(adapter);
+
 /*
         TextView textView2 = (TextView) recyclerView.findViewById(R.id.courseCode);
         if (textView2 == null) {
@@ -172,6 +175,7 @@ public class YourCoursesActivity extends AppCompatActivity {
 
         View v = (View) view.getParent();
         TextView textView = (TextView) v.findViewById(R.id.courseCode);
+        currentCourseCode = textView.getText().toString();
         if (textView == null) {
             System.out.println("Fuck this, I am failing");
         } else {
@@ -240,8 +244,12 @@ public class YourCoursesActivity extends AppCompatActivity {
     }
 
     public void addCourseReview(View view) {
+        View v = (View) view.getParent();
+        TextView textView = (TextView) v.findViewById(R.id.courseCode);
+        currentCourseCode = textView.getText().toString();
         Intent intent = new Intent(this, ReviewActivity.class);
         intent.putExtra("email", email);
+        intent.putExtra("currentCourseCode", currentCourseCode);
         startActivity(intent);
     }
 
@@ -256,10 +264,13 @@ public class YourCoursesActivity extends AppCompatActivity {
                 MongoClient client = new MongoClient(uri);
                 DB db = client.getDB(uri.getDatabase());
                 DBCollection newcollection = db.getCollection("rating_collection");
+                StringTokenizer st = new StringTokenizer(courseCode, ":");
+                String nextToken1 = st.nextToken();
+                String nextToken2 = st.nextToken();
                 BasicDBObject alphaDoc = new BasicDBObject();
 
-                alphaDoc.put("courseCode", courseCode);
-
+                alphaDoc.put("courseCode", nextToken2.substring(1));
+                alphaDoc.put("Email", email);
                 alphaDoc.put("rating", bleh);
 
                 newcollection.insert(alphaDoc);
@@ -288,8 +299,15 @@ public class YourCoursesActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+            View parentView = (View)v.getParent();
+            TextView textView = (TextView) v.findViewById(R.id.courseCode);
+            currentCourseCode = (String) textView.getText().toString();
+
             Intent intent = new Intent(v.getContext(), ReviewActivity.class);
             intent.putExtra("email", email);
+            intent.putExtra("currentCourseCode", currentCourseCode);
+            System.out.println("The value of courseCode cocksucka is (from YOURCOURSESACTIVITY): " + currentCourseCode);
+
             startActivityForResult(intent, 0);
 
         }
