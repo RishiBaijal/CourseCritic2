@@ -182,10 +182,10 @@ public class YourCoursesActivity extends AppCompatActivity {
             builder.setMessage("Enter the Rating");
             builder.setIcon(android.R.drawable.ic_dialog_alert);
 
-            final RatingBar input = new RatingBar(this);
+//            final RatingBar input = new RatingBar(this);
 //            input.setStepSize(1f);
-//            input.setNumStars(1);
-//            input.setMax(1);
+//            input.setNumStars(10);
+//            input.setMax(10);
 //            input.setFocusable(false);
 //            input.setIsIndicator(false);
 
@@ -202,13 +202,16 @@ public class YourCoursesActivity extends AppCompatActivity {
 //            editor.show();
 
 
-            input.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            //input.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             builder.setView(layout);
+            final RatingBar ratingBar = (RatingBar) layout.findViewById(R.id.rating);
 
             //builder.setView(input);
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    bleh = input.getProgress();
+                    System.out.println("Positive Button clicked SUCKERRRR");
+//                    bleh = input.getProgress();
+                    bleh = ratingBar.getProgress();
                     SaveRatingtoDB saveRatingtoDB = new SaveRatingtoDB();
                     saveRatingtoDB.execute(courseCode);
                     dialog.dismiss();
