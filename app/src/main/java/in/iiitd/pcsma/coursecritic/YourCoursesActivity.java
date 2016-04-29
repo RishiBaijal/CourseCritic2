@@ -2,17 +2,24 @@ package in.iiitd.pcsma.coursecritic;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.*;
@@ -31,6 +38,8 @@ import java.util.concurrent.ExecutionException;
 public class YourCoursesActivity extends AppCompatActivity {
 
 
+    Integer bleh;
+
     String tempAcc = "";
     private ProgressDialog progressDialog;
     HashSet<String> courseInfo = new HashSet<String>();
@@ -43,6 +52,8 @@ public class YourCoursesActivity extends AppCompatActivity {
     private static ArrayList<DataModel> data;
     static View.OnClickListener myOnClickListener;
     private static ArrayList<Integer> removedItems;
+
+    static String email = "";
 
 
     @Override
@@ -65,13 +76,12 @@ public class YourCoursesActivity extends AppCompatActivity {
 
 //        TextView textView = (TextView) findViewById(R.id.courseView);
 //        TextView textView1 = (TextView) findViewById(R.id.courseName);
-//        TextView textView2 = (TextView) findViewById(R.id.courseCode);
-
 
         Bundle bundle = getIntent().getExtras();//String username = bundle.getString("username");
-        String email = bundle.getString("email");
+        email = bundle.getString("email");
         // System.out.println("USERNAME:"  + username);
         System.out.println("EMAIL: " + email);
+
 
         GetCourseFromDB getCourseFromDB = new GetCourseFromDB();
 
@@ -89,8 +99,8 @@ public class YourCoursesActivity extends AppCompatActivity {
                 StringTokenizer st = new StringTokenizer(nextElement, ";");
                 System.out.println("Next element: " + nextElement);
                 if (st.countTokens() == 3) {
-                    String courseCode = st.nextToken();
                     String courseName = st.nextToken();
+                    String courseCode = st.nextToken();
                     String instructor = st.nextToken();
                     courseCodes[c] = courseCode;
                     courseNames[c] = courseName;
@@ -120,6 +130,101 @@ public class YourCoursesActivity extends AppCompatActivity {
         }
         adapter = new CustomAdapter(data);
         recyclerView.setAdapter(adapter);
+/*
+        TextView textView2 = (TextView) recyclerView.findViewById(R.id.courseCode);
+        if (textView2 == null) {
+            System.out.println("Text view is still null, and you're fucked.");
+        }
+        final String getCourseCode = textView2.getText().toString();
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rate the Course");
+        builder.setMessage("Enter the Rating");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        final RatingBar input = new RatingBar(this);
+        input.setMax(5);
+        input.setNumStars(5);
+        input.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        builder.setView(input);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                bleh = input.getProgress();
+                SaveRatingtoDB saveRatingtoDB = new SaveRatingtoDB();
+                saveRatingtoDB.execute(getCourseCode);
+                dialog.dismiss();
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+*/
+
+    }
+
+    public void showRating(View view) {
+
+
+        View v = (View) view.getParent();
+        TextView textView = (TextView) v.findViewById(R.id.courseCode);
+        if (textView == null) {
+            System.out.println("Fuck this, I am failing");
+        } else {
+            final String courseCode = textView.getText().toString();
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Rate the Course");
+            builder.setMessage("Enter the Rating");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+
+            final RatingBar input = new RatingBar(this);
+//            input.setStepSize(1f);
+//            input.setNumStars(1);
+//            input.setMax(1);
+//            input.setFocusable(false);
+//            input.setIsIndicator(false);
+
+
+//            input.setMax(5);
+//            input.setNumStars(5);
+//            input.setStepSize(1);
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+
+            View layout = inflater.inflate(R.layout.rating_bar_view, null, false);
+            //final RatingBar input = (RatingBar) layout.findViewById(R.id.rating);
+//            inflater.infla
+            //            editor.setView(layout);
+//            editor.show();
+
+
+            input.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            builder.setView(layout);
+
+            //builder.setView(input);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    bleh = input.getProgress();
+                    SaveRatingtoDB saveRatingtoDB = new SaveRatingtoDB();
+                    saveRatingtoDB.execute(courseCode);
+                    dialog.dismiss();
+
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    dialog.cancel();
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
 
     }
 
@@ -133,8 +238,42 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     public void addCourseReview(View view) {
         Intent intent = new Intent(this, ReviewActivity.class);
+        intent.putExtra("email", email);
         startActivity(intent);
     }
+
+    public class SaveRatingtoDB extends AsyncTask<String, Void, Boolean> {
+
+
+        @Override
+        protected Boolean doInBackground(String... arg0) {
+            try {
+                String courseCode = arg0[0];
+                MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
+                MongoClient client = new MongoClient(uri);
+                DB db = client.getDB(uri.getDatabase());
+                DBCollection newcollection = db.getCollection("rating_collection");
+                BasicDBObject alphaDoc = new BasicDBObject();
+
+                alphaDoc.put("courseCode", courseCode);
+
+                alphaDoc.put("rating", bleh);
+
+                newcollection.insert(alphaDoc);
+                return true;
+
+
+            } catch (Exception e) {
+                return false;
+            }
+        }
+//
+//    protected void onProgressUpdate(Integer... progress) {
+//        setProgressPercent(progress[0]);
+//    }
+
+    }
+
 
     private class MyOnClickListener implements View.OnClickListener {
 
@@ -147,6 +286,7 @@ public class YourCoursesActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), ReviewActivity.class);
+            intent.putExtra("email", email);
             startActivityForResult(intent, 0);
 
         }

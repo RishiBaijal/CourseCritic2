@@ -19,11 +19,7 @@
         android:stepSize="1.0"
         android:rating="1.0" />
 
-    <Button
-        android:id="@+id/btnSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -67,6 +63,11 @@
         android:layout_height="wrap_content"
         android:hint="Answer the question here.."
         android:layout_width = "match_parent" />
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
 </LinearLayout>
 
 

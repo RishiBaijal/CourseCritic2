@@ -1,5 +1,6 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,8 +26,15 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class ReviewActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
@@ -35,14 +43,23 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
     private TextView txtRatingValue;
     private Button btnSubmit;
 
+    //String answerArray[] = new String[8];
+    String answer = "", question = "";
+    static String email = "";
+    static String other = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
+        Bundle bundle = getIntent().getExtras();
+        email = bundle.getString("email");
+        System.out.println("The value of email is: " + email);
+
         addListenerOnRatingBar();
         addListenerOnButton();
-
+/*
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> questionList = new ArrayList<String>();
@@ -57,6 +74,7 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, questionList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        */
 
 
 
@@ -109,11 +127,15 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
 
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(ReviewActivity.this,
-                        String.valueOf(ratingBar.getRating()),
-                        Toast.LENGTH_SHORT).show();
-
+                EditText visibleEditText = (EditText) findViewById(R.id.visibleEditText);
+                String answer = (String) visibleEditText.getText().toString();
+                if (question.equalsIgnoreCase("Other"))
+                {
+                    EditText hiddenEditText = (EditText) findViewById(R.id.hiddenEditText);
+                    question = (String) hiddenEditText.getText().toString();
+                }
+                SaveAnswerToDB obj = new SaveAnswerToDB();
+                obj.execute(question + ";" + answer);
             }
 
         });
@@ -124,13 +146,16 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         System.out.println("onItemSelected gets executed. ");
         String item = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        question = item;
+        Toast.makeText(parent.getContext(), "Selected: " + position + " " + item, Toast.LENGTH_LONG).show();
         EditText visibleEditText = (EditText) findViewById(R.id.visibleEditText);
         EditText hiddenEditText = (EditText) findViewById(R.id.hiddenEditText);
         hiddenEditText.setVisibility(View.GONE);
         if (item.equalsIgnoreCase("Other"))
         {
             hiddenEditText.setVisibility(View.VISIBLE);
+            other = (String) visibleEditText.getText().toString();
+            System.out.println("The value of other is : " + other);
         }
 
 
@@ -138,6 +163,42 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    class SaveAnswerToDB extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... arg0) {
+            try
+            {
+                String questionAns = arg0[0];
+                System.out.println("STUDENT INFO: " + questionAns);
+                MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
+                MongoClient client = new MongoClient(uri);
+                DB db = client.getDB(uri.getDatabase());
+                DBCollection newcollection = db.getCollection("review_collection");
+                StringTokenizer st = new StringTokenizer(questionAns, ";");
+                String question = st.nextToken();
+                String answer = st.nextToken();
+                BasicDBObject alphaDoc = new BasicDBObject();
+                alphaDoc.put("Email", email);
+                alphaDoc.put("question", question);
+                alphaDoc.put("answer", answer);
+                newcollection.insert(alphaDoc);
+                return true;
+
+
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+//
+//    protected void onProgressUpdate(Integer... progress) {
+//        setProgressPercent(progress[0]);
+//    }
 
     }
 //    @Override
