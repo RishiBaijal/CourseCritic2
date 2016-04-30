@@ -33,6 +33,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
+import org.w3c.dom.Text;
+
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
@@ -183,8 +185,8 @@ public class YourCoursesActivity extends AppCompatActivity {
         } else {
             final String courseCode = textView.getText().toString();
             System.out.println(courseCode);
-            String[] arraynew = courseCode.split(": ");
-            courseCodeGlobal = arraynew[1];
+            String[] arraynew = courseCode.split(":");
+            courseCodeGlobal = arraynew[1].substring(1);
             System.out.println("CourseCodeGlobal is" + courseCodeGlobal);
 
 
@@ -252,8 +254,13 @@ public class YourCoursesActivity extends AppCompatActivity {
     }
 
     public void addCourseReview(View view) {
+        View v = (View) view.getParent();
+
+        TextView textView = (TextView) v.findViewById(R.id.courseCode);
+        String courseCodeLocal = textView.getText().toString();
         Intent intent = new Intent(this, ReviewActivity.class);
         intent.putExtra("email", email);
+        intent.putExtra("currentCourseCode", courseCodeLocal);
         startActivity(intent);
     }
 
@@ -309,8 +316,11 @@ public class YourCoursesActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+            TextView textView = (TextView) v.findViewById(R.id.courseCode);
+            String courseCodeLocal = textView.getText().toString();
             Intent intent = new Intent(v.getContext(), ReviewActivity.class);
             intent.putExtra("email", email);
+            intent.putExtra("currentCourseCode", courseCodeLocal);
             startActivityForResult(intent, 0);
 
         }

@@ -33,6 +33,7 @@ package in.iiitd.pcsma.coursecritic;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -134,7 +135,7 @@ public class YourFriendsActivity extends AppCompatActivity {
         }
     }
 
-    private static class MyOnClickListener implements View.OnClickListener {
+    private class MyOnClickListener implements View.OnClickListener {
 
         private final Context context;
 
@@ -144,7 +145,13 @@ public class YourFriendsActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            System.out.println("The sluts cardview is clicked.");
+            //System.out.println("The sluts cardview is clicked.");
+            TextView  textView = (TextView) v.findViewById(R.id.contactEmailTextView);
+            String email = textView.getText().toString();
+            Intent intent = new Intent(v.getContext(), GetReviewInfoActivity.class);
+            intent.putExtra("email", email);
+            startActivityForResult(intent, 0);
+
         }
 
 //        private void removeItem(View v) {

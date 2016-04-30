@@ -59,4 +59,5 @@
     <string name="cancel">Cancel</string>
     <string name="title_activity_review">ReviewActivity</string>
     <string name="spinner_title">Review Questions</string>
+    <string name="title_activity_get_review_info">GetReviewInfoActivity</string>
 </resources>
