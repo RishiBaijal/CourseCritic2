@@ -31,11 +31,13 @@
 //=======
 package in.iiitd.pcsma.coursecritic;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -55,12 +57,20 @@ import com.google.gdata.data.*;
 import com.google.gdata.data.contacts.*;
 import com.google.gdata.data.extensions.*;
 import com.google.gdata.util.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class YourFriendsActivity extends AppCompatActivity {
 
@@ -172,6 +182,52 @@ public class YourFriendsActivity extends AppCompatActivity {
 //            adapter.notifyItemRemoved(selectedItemPosition);
 //        }
     }
+//
+//    public class GetCourseInfoFromDB extends AsyncTask<String, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            try {
+//                String tempAcc = "";
+//                String email = arg0[0];
+//                MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
+//                MongoClient client = new MongoClient(uri);
+//                DB db = client.getDB(uri.getDatabase());
+//                DBCollection newcollection = db.getCollection("student_collection");
+//                BasicDBObject searchQuery = new BasicDBObject();
+//                searchQuery.put("email", email);
+//                DBCursor dbCursor = newcollection.find(searchQuery);
+//                while (dbCursor.hasNext()) {
+//                    DBObject dbObject = dbCursor.next();
+//                    String course_id = (String) dbObject.get("course_id");
+//                    System.out.println("COURSE ID: " + course_id);
+//                    DBCollection courseCollection = db.getCollection("course_collection");
+//                    BasicDBObject searchQuery2 = new BasicDBObject();
+//                    searchQuery2.put("course_id", course_id);
+//                    DBCursor dbCursor1 = courseCollection.find(searchQuery2);
+//
+//                    while (dbCursor1.hasNext()) {
+//
+//                        DBObject dbObject1 = dbCursor1.next();
+//                        String course_name = (String) dbObject1.get("course_name");
+//                        String course_instructor = (String) dbObject1.get("course_instructor");
+//                        tempAcc = course_id + ";" + course_name + ";" + course_instructor;
+//                        System.out.println("THE VALUE OF TEMPACC IS: " + tempAcc);
+//                    }
+//                    //tempAcc = tempAcc + ";";
+//                    if (!(tempAcc.equals("")))
+//                        courseInfo.add(tempAcc);
+//
+//                }
+//                return tempAcc;
+//
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return "NULLA";
+//            }
+//        }
+//    }
 
 //
 //    public TextView outputText;

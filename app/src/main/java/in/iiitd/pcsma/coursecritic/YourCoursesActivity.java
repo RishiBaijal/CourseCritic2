@@ -54,7 +54,6 @@ public class YourCoursesActivity extends AppCompatActivity {
     private static RecyclerView recyclerView;
     private static ArrayList<DataModel> data;
     static View.OnClickListener myOnClickListener;
-    private static ArrayList<Integer> removedItems;
 
     static String email = "";
 
