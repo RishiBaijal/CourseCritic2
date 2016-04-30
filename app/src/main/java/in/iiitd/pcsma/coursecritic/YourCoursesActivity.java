@@ -40,7 +40,7 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     Integer bleh;
 
-    String tempAcc = "";
+    String tempAcc = "", courseCodeGlobal = "";
     private ProgressDialog progressDialog;
     HashSet<String> courseInfo = new HashSet<String>();
     static String courseNames[], courseCodes[], instructorNames[];
@@ -102,15 +102,20 @@ public class YourCoursesActivity extends AppCompatActivity {
                     String courseName = st.nextToken();
                     String courseCode = st.nextToken();
                     String instructor = st.nextToken();
+                    /*String aggregate = st.nextToken();
+                    String count = st.nextToken();*/
+
                     courseCodes[c] = courseCode;
                     courseNames[c] = courseName;
                     instructorNames[c] = instructor;
                     c++;
                 }
             }
-            c = 0;
+            //Comment out c here
+            //c = 0;
             int i;
-            for (i = 0; i < 3; i++) {
+            //Make 3 -> c here
+            for (i = 0; i < c; i++) {
                 System.out.println("Course code array element #: " + i + " " + courseCodes[i]);
                 System.out.println("Course Names array element #: " + i + " " + courseNames[i]);
                 System.out.println("Instructor names array element #: " + i + " " + instructorNames[i]);
@@ -176,6 +181,12 @@ public class YourCoursesActivity extends AppCompatActivity {
             System.out.println("Fuck this, I am failing");
         } else {
             final String courseCode = textView.getText().toString();
+            System.out.println(courseCode);
+            String[] arraynew = courseCode.split(": ");
+            courseCodeGlobal = arraynew[1];
+            System.out.println("CourseCodeGlobal is" + courseCodeGlobal);
+
+
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Rate the Course");
@@ -213,7 +224,7 @@ public class YourCoursesActivity extends AppCompatActivity {
 //                    bleh = input.getProgress();
                     bleh = ratingBar.getProgress();
                     SaveRatingtoDB saveRatingtoDB = new SaveRatingtoDB();
-                    saveRatingtoDB.execute(courseCode);
+                    saveRatingtoDB.execute(courseCodeGlobal);
                     dialog.dismiss();
 
                 }
@@ -256,10 +267,19 @@ public class YourCoursesActivity extends AppCompatActivity {
                 MongoClient client = new MongoClient(uri);
                 DB db = client.getDB(uri.getDatabase());
                 DBCollection newcollection = db.getCollection("rating_collection");
+                DBCollection doscollection = db.getCollection("course_collection");
                 BasicDBObject alphaDoc = new BasicDBObject();
+                BasicDBObject query = new BasicDBObject();
+                query.put("course_id", courseCode);
+
+                BasicDBObject updated = new BasicDBObject();
+                updated.put("$inc", new BasicDBObject("aggregate", bleh).append("count", 1));
+
+                doscollection.update(query, updated);
+
+
 
                 alphaDoc.put("courseCode", courseCode);
-
                 alphaDoc.put("rating", bleh);
 
                 newcollection.insert(alphaDoc);

@@ -24,6 +24,7 @@ public class SaveRatingtoDB extends AsyncTask<String, Void, Boolean> {
             MongoClient client = new MongoClient(uri);
             DB db = client.getDB(uri.getDatabase());
             DBCollection newcollection = db.getCollection("rating_collection");
+
 //        StringTokenizer st = new StringTokenizer(studentInfo, ":");
 //        String username = st.nextToken();
 //        String email = st.nextToken();

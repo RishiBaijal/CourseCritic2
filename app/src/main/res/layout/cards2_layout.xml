@@ -38,33 +38,16 @@
             android:textColor="#666"
             android:textSize="14dp" />
 
-        <Button
-            android:id="@+id/reviewButton"
-            android:gravity="bottom|end"
+        <TextView
+            android:id="@+id/courseRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/courseCode"
             android:maxLines="3"
-            android:onClick="addCourseReview"
             android:padding="8dp"
-            android:text="Review this course"
             android:textColor="#666"
             android:textSize="14dp" />
 
-        <Button
-            android:id="@+id/rateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|end"
-            android:maxLines="3"
-            android:padding="8dp"
-            android:text="Rate this course"
-            android:textColor="#666"
-            android:textSize="14dp"
-            android:layout_below="@+id/courseCode"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:onClick = "showRating"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
 

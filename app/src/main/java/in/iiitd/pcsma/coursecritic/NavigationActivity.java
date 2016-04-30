@@ -169,6 +169,12 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
+        } else if (id == R.id.nav_discussions) {
+            Intent intent = new Intent(this, DiscussionActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
+            startActivity(intent);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
