@@ -1,13 +1,19 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -28,6 +34,12 @@ public class DisplayReviews extends AppCompatActivity {
     ArrayList<String> ratingArray = new ArrayList<String>();
 
 
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+    private static ArrayList<ReviewModel> data;
+    static View.OnClickListener myOnClickListener;
+
     String courseCode = "";
 
     @Override
@@ -37,9 +49,20 @@ public class DisplayReviews extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        recyclerView = (RecyclerView) findViewById(R.id.display_recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        data = new ArrayList<ReviewModel>();
         Bundle bundle = getIntent().getExtras();
         String email = bundle.getString("email");
         courseCode = bundle.getString("courseCode");
+
+        myOnClickListener = new MyOnClickListener(this);
+
 
         GetReviewFromDB getReviewFromDB = new GetReviewFromDB();
         String rating = null;
@@ -54,8 +77,33 @@ public class DisplayReviews extends AppCompatActivity {
         ratingBar.setNumStars(Integer.parseInt(rating));
         System.out.println("QuestionArray: " + questionArray);
         System.out.println("Answer array: " + answerArray);
+        for (int i = 0; i < questionArray.size(); i++) {
+            data.add(new ReviewModel(questionArray.get(i), answerArray.get(i)));
+        }
+        adapter = new ReviewDisplayAdapter(data);
+        recyclerView.setAdapter(adapter);
 
+    }
 
+    private class MyOnClickListener implements View.OnClickListener {
+
+        private final Context context;
+
+        private MyOnClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("FROM DisplayReviewsActivity");
+//            TextView textView = (TextView) v.findViewById(R.id.courseCode);
+//            String courseCodeLocal = textView.getText().toString();
+//            Intent intent = new Intent(v.getContext(), ReviewActivity.class);
+//            intent.putExtra("email", email);
+//            intent.putExtra("currentCourseCode", courseCodeLocal);
+//            startActivityForResult(intent, 0);
+
+        }
     }
     public class GetReviewFromDB extends AsyncTask<String, Void, String> {
         String rating = "";
