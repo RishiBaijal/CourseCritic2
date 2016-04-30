@@ -55,6 +55,10 @@
         <activity
             android:name=".GetReviewInfoActivity"
             android:label="CourseCritic Reviews"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DisplayReviews"
+            android:label="@string/title_activity_display_reviews"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

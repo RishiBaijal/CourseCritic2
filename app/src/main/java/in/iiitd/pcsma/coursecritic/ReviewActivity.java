@@ -190,6 +190,8 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
                 StringTokenizer st1 = new StringTokenizer(courseCode, ":");
                 String token1 = st1.nextToken();
                 String token2 = st1.nextToken();
+                if (token2.charAt(0) == ' ')
+                    token2 = token2.substring(1);
                 System.out.println("TOKEN 2: " + token2);
                 BasicDBObject alphaDoc = new BasicDBObject();
                 alphaDoc.put("Email", email);

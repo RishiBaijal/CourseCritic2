@@ -52,9 +52,9 @@ public class ViewReviewAdapter extends RecyclerView.Adapter<ViewReviewAdapter.My
         TextView courseName = holder.courseName;
         TextView courseCode = holder.courseCode;
 
-        courseView.setText(dataSet.get(listPosition).getInstructorName());
-        courseName.setText(dataSet.get(listPosition).getCourseName());
-        courseCode.setText(dataSet.get(listPosition).getCourseCode());
+        courseView.setText("Instructor Name: " + dataSet.get(listPosition).getInstructorName());
+        courseName.setText("Course Name: " + dataSet.get(listPosition).getCourseName());
+        courseCode.setText("Course code: " + dataSet.get(listPosition).getCourseCode());
     }
 
     @Override

@@ -60,4 +60,5 @@
     <string name="title_activity_review">ReviewActivity</string>
     <string name="spinner_title">Review Questions</string>
     <string name="title_activity_get_review_info">GetReviewInfoActivity</string>
+    <string name="title_activity_display_reviews">DisplayReviews</string>
 </resources>

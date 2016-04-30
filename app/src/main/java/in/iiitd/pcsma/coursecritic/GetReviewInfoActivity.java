@@ -22,6 +22,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,6 +34,8 @@ public class GetReviewInfoActivity extends AppCompatActivity {
 
     HashSet<String> courseInfo = new HashSet<String>();
     static String courseNames[], courseCodes[], instructorNames[];
+
+    String email = "";
 
 
     private static RecyclerView.Adapter adapter;
@@ -46,9 +50,11 @@ public class GetReviewInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_review_info);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Bundle bundle = getIntent().getExtras();
-        String email = bundle.getString("email");
+        email = bundle.getString("email");
         myOnClickListener = new MyOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.review_recycler_view);
@@ -163,7 +169,17 @@ public class GetReviewInfoActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            System.out.println("The slut's cardview is clicked. ");
+            TextView textView = (TextView) v.findViewById(R.id.courseCode);
+            String temp = textView.getText().toString();
+            StringTokenizer st = new StringTokenizer(temp, ":");
+            st.nextToken();
+            String courseCode = st.nextToken();
+            courseCode = courseCode.substring(1);
+            System.out.println("The slut's cardview is clicked. " + courseCode + " " + email);
+            Intent intent = new Intent(v.getContext(), DisplayReviews.class);
+            intent.putExtra("email", email);
+            intent.putExtra("courseCode", courseCode);
+            startActivity(intent);
 
         }
 

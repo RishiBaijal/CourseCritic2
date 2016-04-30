@@ -285,6 +285,7 @@ public class YourCoursesActivity extends AppCompatActivity {
                 doscollection.update(query, updated);
 
 
+                alphaDoc.put("Email", email);
 
                 alphaDoc.put("courseCode", courseCode);
                 alphaDoc.put("rating", bleh);
