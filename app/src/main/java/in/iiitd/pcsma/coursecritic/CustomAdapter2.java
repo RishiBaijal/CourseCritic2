@@ -1,6 +1,5 @@
 package in.iiitd.pcsma.coursecritic;
 
-
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,26 +8,30 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Udai on 4/30/2016.
+ */
+public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.MyViewHolder> {
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
-
-    private ArrayList<DataModel> dataSet;
+    private ArrayList<DataModel2> dataSet;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView courseView;
         TextView courseName;
         TextView courseCode;
+        TextView courseRating;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.courseView = (TextView) itemView.findViewById(R.id.courseView);
             this.courseName = (TextView) itemView.findViewById(R.id.courseName);
             this.courseCode = (TextView) itemView.findViewById(R.id.courseCode);
+            this.courseRating = (TextView) itemView.findViewById(R.id.courseRating);
         }
     }
 
-    public CustomAdapter(ArrayList<DataModel> data) {
+    public CustomAdapter2(ArrayList<DataModel2> data) {
         this.dataSet = data;
     }
 
@@ -36,9 +39,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cards_layout, parent, false);
+                .inflate(R.layout.cards2_layout, parent, false);
 
-        view.setOnClickListener(YourCoursesActivity.myOnClickListener);
+        view.setOnClickListener(Top50Activity.myOnClickListener);
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
@@ -50,10 +53,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         TextView courseView = holder.courseView;
         TextView courseName = holder.courseName;
         TextView courseCode = holder.courseCode;
+        TextView courseRating = holder.courseRating;
 
         courseView.setText("Instructor name: " + dataSet.get(listPosition).getInstructorName());
         courseName.setText("Course Name: " + dataSet.get(listPosition).getCourseName());
         courseCode.setText("Course code: " + dataSet.get(listPosition).getCourseCode());
+        courseRating.setText("Course Rating: " + dataSet.get(listPosition).getRating());
     }
 
     @Override

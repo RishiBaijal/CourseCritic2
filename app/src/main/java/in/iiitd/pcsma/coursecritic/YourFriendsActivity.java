@@ -1,3 +1,34 @@
+//<<<<<<< HEAD
+//package in.iiitd.pcsma.coursecritic;
+//
+//import android.os.Bundle;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.Snackbar;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.Toolbar;
+//import android.view.View;
+//
+//public class YourFriendsActivity extends AppCompatActivity {
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_your_friends);
+////        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+////        setSupportActionBar(toolbar);
+////
+////        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+////        fab.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+////            }
+////        });
+//    }
+//
+//}
+//=======
 package in.iiitd.pcsma.coursecritic;
 
 import android.content.ContentResolver;
@@ -229,3 +260,4 @@ public class YourFriendsActivity extends AppCompatActivity {
 ////    }
 
 }
+//>>>>>>> 62b3cf80c5cafac8109a3be8345d65164af4ba21
