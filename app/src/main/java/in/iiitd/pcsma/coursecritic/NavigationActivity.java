@@ -151,13 +151,15 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
-        }  else if (id == R.id.nav_past_course) {
-            Intent intent = new Intent(this, PastCoursesActivity.class);
-            intent.putExtra("username", username1);
-            intent.putExtra("email", email1);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_top_50) {
+        }
+//        else if (id == R.id.nav_past_course) {
+//            Intent intent = new Intent(this, PastCoursesActivity.class);
+//            intent.putExtra("username", username1);
+//            intent.putExtra("email", email1);
+//            startActivity(intent);
+//
+//        }
+        else if (id == R.id.nav_top_50) {
             Intent intent = new Intent(this, Top50Activity.class);
             intent.putExtra("username", username1);
             intent.putExtra("email", email1);
@@ -175,6 +177,12 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
+        }
+        else if (id == R.id.nav_feedback)
+        {
+            Intent intent = new Intent(this, FeedBackActivity.class);
+            intent.putExtra("email", email1);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

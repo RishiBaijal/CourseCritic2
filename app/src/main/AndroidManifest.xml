@@ -59,6 +59,10 @@
         <activity
             android:name=".DisplayReviews"
             android:label="@string/title_activity_display_reviews"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FeedBackActivity"
+            android:label="@string/title_activity_feed_back"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
