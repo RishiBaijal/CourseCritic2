@@ -1,74 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="in.iiitd.pcsma.coursecritic.GetReviewInfoActivity">
 
-    <TextView
-        android:id="@+id/lblRateMe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rate this course"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:stepSize="1.0"
-        android:rating="1.0" />
-
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <TextView
-            android:id="@+id/lblResult"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_recommendations" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="80dp"
+        android:orientation="vertical" >
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/spinner_title"
+            />
+
+
+
+        <EditText
+            android:id = "@+id/hiddenEditText"
+            android:layout_height="wrap_content"
+            android:layout_width = "match_parent"
+            android:hint="Other"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id = "@+id/visibleEditText"
+            android:layout_height="wrap_content"
+            android:hint="Answer the question here.."
+            android:layout_width = "match_parent" />
+        <Button
+            android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Result : "
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/txtRatingValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
+            android:text="Submit" />
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:prompt="@string/spinner_title"
-        />
 
 
 
-    <EditText
-        android:id = "@+id/hiddenEditText"
-        android:layout_height="wrap_content"
-        android:layout_width = "match_parent"
-        android:hint="Other"
-        android:visibility="gone"/>
+</android.support.design.widget.CoordinatorLayout>
 
-    <EditText
-        android:id = "@+id/visibleEditText"
-        android:layout_height="wrap_content"
-        android:hint="Answer the question here.."
-        android:layout_width = "match_parent" />
-    <Button
-        android:id="@+id/btnSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
-</LinearLayout>
+
+
+
 
 
 

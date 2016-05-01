@@ -1,5 +1,6 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +43,7 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
     private RatingBar ratingBar;
     private TextView txtRatingValue;
     private Button btnSubmit;
+    ProgressDialog progressDialog;
 
     //String answerArray[] = new String[8];
     String answer = "", question = "";
@@ -59,7 +61,6 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
         System.out.println("The value of email is: " + email);
         System.out.println("The value of courseCode cocksucka is (from ReviewActivity): " + courseCode);
 
-        addListenerOnRatingBar();
         addListenerOnButton();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -81,46 +82,46 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
 
 
     }
-
-    public void addListenerOnRatingBar() {
-
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-        txtRatingValue = (TextView) findViewById(R.id.txtRatingValue);
-
-        //if rating value is changed,
-        //display the current rating value in the result (textview) automatically
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                String courseRating = String.valueOf(rating);
-                System.out.println(";"+courseRating+";");
-                if (courseRating.equals("1.0")) {
-                    txtRatingValue.setText("God-awful.");
-                }
-                else if (courseRating.equals("2.0"))
-                {
-                    txtRatingValue.setText("Painfully average");
-                }
-                else if (courseRating.equals("3.0"))
-                {
-                    txtRatingValue.setText("Satisfactory");
-                }
-                else if (courseRating.equals("4.0"))
-                {
-                    txtRatingValue.setText("Will happily do it again.");
-                }
-                else
-                {
-                    txtRatingValue.setText("Awesometacular");
-                }
-
-            }
-        });
-    }
+//
+//    public void addListenerOnRatingBar() {
+//
+//        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+//        txtRatingValue = (TextView) findViewById(R.id.txtRatingValue);
+//
+//        //if rating value is changed,
+//        //display the current rating value in the result (textview) automatically
+//        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            public void onRatingChanged(RatingBar ratingBar, float rating,
+//                                        boolean fromUser) {
+//                String courseRating = String.valueOf(rating);
+//                System.out.println(";"+courseRating+";");
+//                if (courseRating.equals("1.0")) {
+//                    txtRatingValue.setText("God-awful.");
+//                }
+//                else if (courseRating.equals("2.0"))
+//                {
+//                    txtRatingValue.setText("Painfully average");
+//                }
+//                else if (courseRating.equals("3.0"))
+//                {
+//                    txtRatingValue.setText("Satisfactory");
+//                }
+//                else if (courseRating.equals("4.0"))
+//                {
+//                    txtRatingValue.setText("Will happily do it again.");
+//                }
+//                else
+//                {
+//                    txtRatingValue.setText("Awesometacular");
+//                }
+//
+//            }
+//        });
+//    }
 
     public void addListenerOnButton() {
 
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        //ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
         //if click on me, then display the current rating value.
@@ -170,6 +171,15 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
     class SaveAnswerToDB extends AsyncTask<String, Void, Boolean> {
 
         @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ReviewActivity.this);
+            progressDialog.setMessage("Saving...");
+            progressDialog.show();
+        }
+
+        @Override
         protected Boolean doInBackground(String... arg0) {
             try
             {
@@ -208,6 +218,12 @@ public class ReviewActivity extends ActionBarActivity implements AdapterView.OnI
             {
                 return false;
             }
+        }
+        @Override
+        protected void onPostExecute(Boolean x)
+        {
+            super.onPostExecute(x);
+            progressDialog.dismiss();
         }
 //        @Override
 //        protected void onPostExecute()

@@ -63,9 +63,10 @@
         <activity
             android:name=".FeedBackActivity"
             android:label="@string/title_activity_feed_back"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ReccotoContacts" />
-        <activity android:name=".lel"></activity>
+        <activity android:name=".lel" />
+        <activity android:name=".DetailedRecoViewActivity"></activity>
     </application>
 
 </manifest>

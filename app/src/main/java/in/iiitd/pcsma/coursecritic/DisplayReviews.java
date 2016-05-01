@@ -74,7 +74,8 @@ public class DisplayReviews extends AppCompatActivity {
             e.printStackTrace();
         }
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-        ratingBar.setNumStars(Integer.parseInt(rating));
+        if (!(rating.equals("") || rating == null))
+            ratingBar.setNumStars(Integer.parseInt(rating));
         System.out.println("QuestionArray: " + questionArray);
         System.out.println("Answer array: " + answerArray);
         for (int i = 0; i < questionArray.size(); i++) {
@@ -105,8 +106,10 @@ public class DisplayReviews extends AppCompatActivity {
 
         }
     }
+
     public class GetReviewFromDB extends AsyncTask<String, Void, String> {
         String rating = "";
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -139,8 +142,7 @@ public class DisplayReviews extends AppCompatActivity {
                 }
                 DBCollection ratingCollection = db.getCollection("rating_collection");
                 DBCursor dbCursor1 = ratingCollection.find(searchQuery);
-                while (dbCursor1.hasNext())
-                {
+                while (dbCursor1.hasNext()) {
                     DBObject dbObject = dbCursor1.next();
                     rating = String.valueOf((Integer) dbObject.get("rating"));
                 }

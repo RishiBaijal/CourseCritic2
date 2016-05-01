@@ -1,14 +1,19 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,6 +34,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,7 +48,9 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -56,6 +65,30 @@ public class NavigationActivity extends AppCompatActivity
 
     Thread subscribeThread;
     Thread publishThread;
+
+    private ProgressDialog mProgressDialog;
+
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+    private static ArrayList<RecommendationsModel> data;
+    static View.OnClickListener myOnClickListener;
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 
 //    private BlockingDeque<String> queue = new LinkedBlockingDeque<String>();
 
@@ -75,8 +108,43 @@ public class NavigationActivity extends AppCompatActivity
         toggle.syncState();
         setupConnectionFactory();
 
+
+        myOnClickListener = new MyOnClickListener(this);
+        recyclerView = (RecyclerView) findViewById(R.id.newsFeed_recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        data = new ArrayList<RecommendationsModel>();
+
+        String fileData = readFromFile();
+        StringTokenizer st = new StringTokenizer(fileData, System.lineSeparator());
+        int len = st.countTokens();
+        String recosArray[] = new String[len];
+        String timeStampArray[] = new String[len];
+        int i;
+        for (i = 0; i< len; i++)
+        {
+            String w = st.nextToken();
+            //StringTokenizer st1 = new StringTokenizer(w, ":");
+            int firstOccOfSpace = w.indexOf(" ");
+            recosArray[i] = w.substring(firstOccOfSpace);
+            timeStampArray[i] = w.substring(0, firstOccOfSpace);
+        }
+        System.out.println("RECOSARRAY: " + recosArray);
+        System.out.println("TIMESTAMPARRAY: " + timeStampArray);
+        for (i = 0; i < recosArray.length; i++) {
+            data.add(new RecommendationsModel(recosArray[i], timeStampArray[i]));
+        }
+
+        adapter = new RecommendationsAdapter(data);
+        recyclerView.setAdapter(adapter);
+
+/*TODO: GET this shit to work
         TextView kek = (TextView)findViewById(R.id.newsFeed);
-        kek.setText(readFromFile());
+        kek.setText(readFromFile());*/
 
 
 //        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header_navigation);
@@ -93,15 +161,22 @@ public class NavigationActivity extends AppCompatActivity
             @Override
             public void handleMessage(Message msg) {
                 String message = msg.getData().getString("msg");
-                TextView tv = (TextView) findViewById(R.id.newsFeed);
+                //TextView tv = (TextView) findViewById(R.id.newsFeed);
+
                 Date now = new Date();
                 SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
-                tv.append(ft.format(now)  + ":" + ' ' + message + '\n');
+                String formatted = ft.format(now)  + ":" + ' ' + message + '\n';
+                //StringTokenizer st2 = new StringTokenizer(formatted, ":");
+                data.add(new RecommendationsModel(message, ft.format(now) + ""));
+                //tv.append();
                 String temp = ft.format(now) + ":" + " " + message + '\n';
 
                 writeToFile(temp);
+                adapter = new RecommendationsAdapter(data);
+                recyclerView.setAdapter(adapter);
             }
         };
+
         subscribe(incomingMessageHandler);
 
 
@@ -198,6 +273,7 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
         } else if (id == R.id.nav_your_courses) {
+            //showProgressDialog();
             Intent intent = new Intent(this, YourCoursesActivity.class);
             intent.putExtra("username", username1);
             intent.putExtra("email", email1);
@@ -364,5 +440,46 @@ public class NavigationActivity extends AppCompatActivity
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+    }
+
+    private class MyOnClickListener implements View.OnClickListener {
+
+        private final Context context;
+
+        private MyOnClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("The slut's cardview is clicked (from NavigationActivity)");
+            TextView recoView = (TextView) v.findViewById(R.id.recoView);
+            TextView timeStampView = (TextView) v.findViewById(R.id.timeStampView);
+            String reco = recoView.getText().toString();
+            String timeStamp = timeStampView.getText().toString();
+            Intent intent = new Intent(v.getContext(), DetailedRecoViewActivity.class);
+            intent.putExtra("reco", reco);
+            intent.putExtra("timeStamp", timeStamp);
+            startActivity(intent);
+
+        }
+
+//        private void removeItem(View v) {
+//            int selectedItemPosition = recyclerView.getChildPosition(v);
+//            RecyclerView.ViewHolder viewHolder
+//                    = recyclerView.findViewHolderForPosition(selectedItemPosition);
+//            TextView textViewName
+//                    = (TextView) viewHolder.itemView.findViewById(R.id.textViewName);
+//            String selectedName = (String) textViewName.getText();
+//            int selectedItemId = -1;
+//            for (int i = 0; i < MyData.nameArray.length; i++) {
+//                if (selectedName.equals(MyData.nameArray[i])) {
+//                    selectedItemId = MyData.id_[i];
+//                }
+//            }
+//            removedItems.add(selectedItemId);
+//            data.remove(selectedItemPosition);
+//            adapter.notifyItemRemoved(selectedItemPosition);
+//        }
     }
 }

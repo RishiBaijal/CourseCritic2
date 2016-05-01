@@ -43,6 +43,9 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     Integer bleh;
 
+    private ProgressDialog mProgressDialog;
+
+
     String tempAcc = "", courseCodeGlobal = "";
     private ProgressDialog progressDialog;
     HashSet<String> courseInfo = new HashSet<String>();
@@ -56,6 +59,22 @@ public class YourCoursesActivity extends AppCompatActivity {
     static View.OnClickListener myOnClickListener;
 
     static String email = "";
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 
 
     @Override
@@ -88,6 +107,7 @@ public class YourCoursesActivity extends AppCompatActivity {
         GetCourseFromDB getCourseFromDB = new GetCourseFromDB();
 
         try {
+            //showProgressDialog();
             tempAcc = getCourseFromDB.execute(email).get();
             int length = courseInfo.size();
             courseNames = new String[length];
@@ -137,6 +157,7 @@ public class YourCoursesActivity extends AppCompatActivity {
         }
         adapter = new CustomAdapter(data);
         recyclerView.setAdapter(adapter);
+        //hideProgressDialog();
 /*
         TextView textView2 = (TextView) recyclerView.findViewById(R.id.courseCode);
         if (textView2 == null) {
@@ -265,10 +286,21 @@ public class YourCoursesActivity extends AppCompatActivity {
 
     public class SaveRatingtoDB extends AsyncTask<String, Void, Boolean> {
 
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(YourCoursesActivity.this);
+            progressDialog.setMessage("Saving...");
+            progressDialog.show();
+//            showProgressDialog();
+        }
+
 
         @Override
         protected Boolean doInBackground(String... arg0) {
             try {
+
                 String courseCode = arg0[0];
                 MongoClientURI uri = new MongoClientURI("mongodb://rishi:ThunderAndSparks8@ds013881.mlab.com:13881/course_critic");
                 MongoClient client = new MongoClient(uri);
@@ -298,7 +330,14 @@ public class YourCoursesActivity extends AppCompatActivity {
                 return false;
             }
         }
-//
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progressDialog.dismiss();
+            //hideProgressDialog();
+        }
+        //
 //    protected void onProgressUpdate(Integer... progress) {
 //        setProgressPercent(progress[0]);
 //    }
@@ -349,7 +388,11 @@ public class YourCoursesActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(YourCoursesActivity.this, "Fetching your courses", "Contacting the server. Please wait...", true, false);
+            progressDialog = new ProgressDialog(YourCoursesActivity.this);
+            progressDialog.setMessage("Fetching data from database...");
+            progressDialog.show();
+            //showProgressDialog();
+           // progressDialog = ProgressDialog.show(YourCoursesActivity.this, "Fetching your courses", "Contacting the server. Please wait...", true, false);
 
         }
 
@@ -400,6 +443,7 @@ public class YourCoursesActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
+            //hideProgressDialog();
         }
     }
 
