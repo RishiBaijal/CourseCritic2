@@ -9,25 +9,26 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by Apple on 01/05/16.
+ * Created by Udai on 5/1/2016.
  */
-public class ReviewDisplayAdapter extends RecyclerView.Adapter<ReviewDisplayAdapter.MyViewHolder> {
 
-    private ArrayList<ReviewModel> dataSet;
+public class ContactAdapter2 extends RecyclerView.Adapter<ContactAdapter2.MyViewHolder> {
+
+    private ArrayList<ContactModel> dataSet;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView questionView;
-        TextView answerView;
+        TextView contactName;
+        TextView contactEmail;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.questionView = (TextView) itemView.findViewById(R.id.questionView);
-            this.answerView = (TextView) itemView.findViewById(R.id.answerView);
+            this.contactName = (TextView) itemView.findViewById(R.id.contactNameTextView);
+            this.contactEmail = (TextView) itemView.findViewById(R.id.contactEmailTextView);
         }
     }
 
-    public ReviewDisplayAdapter(ArrayList<ReviewModel> data) {
+    public ContactAdapter2(ArrayList<ContactModel> data) {
         this.dataSet = data;
     }
 
@@ -35,9 +36,9 @@ public class ReviewDisplayAdapter extends RecyclerView.Adapter<ReviewDisplayAdap
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.display_review, parent, false);
+                .inflate(R.layout.contact_layout, parent, false);
 
-        view.setOnClickListener(DisplayReviews.myOnClickListener);
+        view.setOnClickListener(ReccotoContacts.myOnClickListener);
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
@@ -46,11 +47,11 @@ public class ReviewDisplayAdapter extends RecyclerView.Adapter<ReviewDisplayAdap
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
-        TextView textViewName = holder.questionView;
-        TextView textViewEmail = holder.answerView;
+        TextView textViewName = holder.contactName;
+        TextView textViewEmail = holder.contactEmail;
 
-        textViewName.setText(dataSet.get(listPosition).getQuestion());
-        textViewEmail.setText(dataSet.get(listPosition).getAnswer());
+        textViewName.setText(dataSet.get(listPosition).getContactName());
+        textViewEmail.setText(dataSet.get(listPosition).getContactEmail());
     }
 
     @Override

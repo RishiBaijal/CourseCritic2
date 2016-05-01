@@ -1,82 +1,52 @@
-//<<<<<<< HEAD
-//package in.iiitd.pcsma.coursecritic;
-//
-//import android.os.Bundle;
-//import android.support.design.widget.FloatingActionButton;
-//import android.support.design.widget.Snackbar;
-//import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.widget.Toolbar;
-//import android.view.View;
-//
-//public class YourFriendsActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_your_friends);
-////        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-////        setSupportActionBar(toolbar);
-////
-////        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-////        fab.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-////                        .setAction("Action", null).show();
-////            }
-////        });
-//    }
-//
-//}
-//=======
 package in.iiitd.pcsma.coursecritic;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
-import com.google.gdata.client.*;
-import com.google.gdata.client.contacts.*;
-import com.google.gdata.data.*;
-import com.google.gdata.data.contacts.*;
-import com.google.gdata.data.extensions.*;
-import com.google.gdata.util.*;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+/*
+public class ReccotoContacts extends AppCompatActivity {
 
-public class YourFriendsActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reccoto_contacts);
+    }
+}*/
+
+public class ReccotoContacts extends AppCompatActivity {
+
 
     ArrayList<String> nameArray = new ArrayList<String>();
     ArrayList<String> emailArray = new ArrayList<String>();
     HashMap<String, String> nameEmailMapping = new HashMap<String, String>();
+    Context context = this;
+
+    Thread publishThread;
+
+    String user = "", courseCode = "", email = "";
 
 
     private static RecyclerView.Adapter adapter;
@@ -86,18 +56,26 @@ public class YourFriendsActivity extends AppCompatActivity {
     static View.OnClickListener myOnClickListener;
     private static ArrayList<Integer> removedItems;
 
+    private BlockingDeque<String> queue = new LinkedBlockingDeque<String>();
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_friends);
+        setContentView(R.layout.activity_reccoto_contacts);
+        setupConnectionFactory();
+        publishToAMQP();
         readContacts();
         System.out.println("NAME ARRAY: " + nameArray);
         System.out.println("EMAIL ARRAY: " + emailArray);
 
+        Bundle bundle = getIntent().getExtras();
+        user = bundle.getString("email");
+        courseCode = bundle.getString("currentCourseCode");
+
         myOnClickListener = new MyOnClickListener(this);
-        recyclerView = (RecyclerView) findViewById(R.id.contacts_recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
@@ -110,7 +88,7 @@ public class YourFriendsActivity extends AppCompatActivity {
         {
             contacts.add(new ContactModel(nameArray.get(i), emailArray.get(i)));
         }
-        adapter = new ContactAdapter(contacts);
+        adapter = new ContactAdapter2(contacts);
         recyclerView.setAdapter(adapter);
 
     }
@@ -145,6 +123,59 @@ public class YourFriendsActivity extends AppCompatActivity {
         }
     }
 
+    ConnectionFactory factory = new ConnectionFactory();
+
+    private void setupConnectionFactory() {
+        String uri = "amqp://kcmhmxfn:gepGpoFPhwoZCr1rHaD93s2RmnOzPdfg@fox.rmq.cloudamqp.com/kcmhmxfn";
+        try {
+            factory.setAutomaticRecoveryEnabled(false);
+            factory.setUri(uri);
+        } catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+
+    public void publishToAMQP() {
+        publishThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Connection connection = factory.newConnection();
+                        Channel ch = connection.createChannel();
+                        ch.confirmSelect();
+
+                        while (true) {
+                            String message = queue.takeFirst();
+                            System.out.println("THE MESSSAGE IS : " + message);
+                            /*messageequis = message;*/
+                            try {
+                                ch.basicPublish("amq.direct", "chat", null, message.getBytes());
+                                Log.d("", "[s] " + message);
+                                ch.waitForConfirmsOrDie();
+                            } catch (Exception e) {
+                                Log.d("", "[f] " + message);
+                                queue.putFirst(message);
+                                throw e;
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        break;
+                    } catch (Exception e) {
+                        Log.d("", "Connection broken: " + e.getClass().getName());
+                        try {
+                            Thread.sleep(5000); //sleep and then try again
+                        } catch (InterruptedException e1) {
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        publishThread.start();
+    }
+
     private class MyOnClickListener implements View.OnClickListener {
 
         private final Context context;
@@ -156,12 +187,48 @@ public class YourFriendsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             //System.out.println("The sluts cardview is clicked.");
-            TextView  textView = (TextView) v.findViewById(R.id.contactEmailTextView);
+            /*TextView textView = (TextView) v.findViewById(R.id.contactEmailTextView);
             String email = textView.getText().toString();
-            Intent intent = new Intent(v.getContext(), GetReviewInfoActivity.class);
+            Intent intent = new Intent(v.getContext(), lel.class);
             intent.putExtra("email", email);
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, 0);*/
+            TextView  textView = (TextView) v.findViewById(R.id.contactEmailTextView);
+            final String email = textView.getText().toString();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Reccomendation");
+            builder.setMessage("Do you want to recommend the course to "+ email);
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
 
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    System.out.println("Positive Button clicked SUCKERRRR");
+                    String message = user + " recommended course " + courseCode  + " to " + email;
+                    publishMessage(message);
+                    dialog.dismiss();
+
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    dialog.cancel();
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+
+        }
+
+
+        void publishMessage(String message) {
+            //Adds a message to internal blocking queue
+            try {
+                Log.d("", "[q] " + message);
+                queue.putLast(message);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
 //        private void removeItem(View v) {
@@ -324,3 +391,4 @@ public class YourFriendsActivity extends AppCompatActivity {
 
 }
 //>>>>>>> 62b3cf80c5cafac8109a3be8345d65164af4ba21
+
