@@ -25,7 +25,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation"
+            android:label="The CourseCritic newsfeed"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".YourFriendsActivity"
@@ -62,11 +62,23 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FeedBackActivity"
-            android:label="@string/title_activity_feed_back"
+            android:label="Feedback"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ReccotoContacts" />
         <activity android:name=".lel" />
-        <activity android:name=".DetailedRecoViewActivity"></activity>
+        <activity android:name=".DetailedRecoViewActivity" />
+        <activity
+            android:name=".GetAllCoursesActivity"
+            android:label="All Courses"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GetAllReviewsForThisCourseActivity"
+            android:label="@string/title_activity_get_all_reviews_for_this_course"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddNewCourseActivity"
+            android:label="@string/title_activity_add_new_course"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

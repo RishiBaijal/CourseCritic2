@@ -279,6 +279,12 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
+        } else if (id == R.id.nav_all_courses)
+        {
+            Intent intent = new Intent(this, GetAllCoursesActivity.class);
+            intent.putExtra("username", username1);
+            intent.putExtra("email", email1);
+            startActivity(intent);
         }
 //        else if (id == R.id.nav_past_course) {
 //            Intent intent = new Intent(this, PastCoursesActivity.class);

@@ -62,4 +62,7 @@
     <string name="title_activity_get_review_info">GetReviewInfoActivity</string>
     <string name="title_activity_display_reviews">DisplayReviews</string>
     <string name="title_activity_feed_back">FeedBackActivity</string>
+    <string name="title_activity_get_all_courses">GetAllCoursesActivity</string>
+    <string name="title_activity_get_all_reviews_for_this_course">Reviews</string>
+    <string name="title_activity_add_new_course">AddNewCourseActivity</string>
 </resources>

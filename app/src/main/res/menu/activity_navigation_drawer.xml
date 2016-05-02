@@ -9,6 +9,9 @@
             android:id="@+id/nav_your_courses"
             android:title="Your courses" />
         <item
+            android:id="@+id/nav_all_courses"
+            android:title="View all courses on offer" />
+        <item
             android:id="@+id/nav_top_50"
             android:title="Top 5 courses" />
         <item

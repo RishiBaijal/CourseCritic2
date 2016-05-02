@@ -41,7 +41,7 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.MyViewHo
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cards2_layout, parent, false);
 
-        view.setOnClickListener(Top50Activity.myOnClickListener);
+        view.setOnClickListener(GetAllCoursesActivity.myOnClickListener);
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
