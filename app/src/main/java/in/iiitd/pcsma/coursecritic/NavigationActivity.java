@@ -1,5 +1,8 @@
 package in.iiitd.pcsma.coursecritic;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +13,9 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,7 +98,6 @@ public class NavigationActivity extends AppCompatActivity
 //    private BlockingDeque<String> queue = new LinkedBlockingDeque<String>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +129,7 @@ public class NavigationActivity extends AppCompatActivity
         String recosArray[] = new String[len];
         String timeStampArray[] = new String[len];
         int i;
-        for (i = 0; i< len; i++)
-        {
+        for (i = 0; i < len; i++) {
             String w = st.nextToken();
             //StringTokenizer st1 = new StringTokenizer(w, ":");
             int firstOccOfSpace = w.indexOf(" ");
@@ -160,12 +163,44 @@ public class NavigationActivity extends AppCompatActivity
         final Handler incomingMessageHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
+
+                String title = "You have a course recommendation";
                 String message = msg.getData().getString("msg");
+
+                NotificationCompat.Builder mBuilder =
+                        (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(title)
+                                .setContentText(message);
+                Intent resultIntent = new Intent(context, SignInActivity.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                stackBuilder.addParentStack(SignInActivity.class);
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(
+                                0,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(0, mBuilder.build());
+
+
+//                String subject=ed2.getText().toString().trim();
+//                String body=ed3.getText().toString().trim();
+//
+//                NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//                Notification notify=new Notification(R.drawable.noti,tittle,System.currentTimeMillis());
+//                PendingIntent pending= PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
+//
+//                notify.setLatestEventInfo(getApplicationContext(),subject,body,pending);
+//                notif.notify(0, notify);
                 //TextView tv = (TextView) findViewById(R.id.newsFeed);
 
                 Date now = new Date();
                 SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
-                String formatted = ft.format(now)  + ":" + ' ' + message + '\n';
+                String formatted = ft.format(now) + ":" + ' ' + message + '\n';
                 //StringTokenizer st2 = new StringTokenizer(formatted, ":");
                 data.add(new RecommendationsModel(message, ft.format(now) + ""));
                 //tv.append();
@@ -279,8 +314,7 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
-        } else if (id == R.id.nav_all_courses)
-        {
+        } else if (id == R.id.nav_all_courses) {
             Intent intent = new Intent(this, GetAllCoursesActivity.class);
             intent.putExtra("username", username1);
             intent.putExtra("email", email1);
@@ -311,9 +345,7 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("email", email1);
             startActivity(intent);
 
-        }
-        else if (id == R.id.nav_feedback)
-        {
+        } else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(this, FeedBackActivity.class);
             intent.putExtra("email", email1);
             startActivity(intent);
@@ -323,6 +355,7 @@ public class NavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public void addCourse(View view) {
     }
 
@@ -337,10 +370,10 @@ public class NavigationActivity extends AppCompatActivity
             e1.printStackTrace();
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        publishThread.interrupt();
         subscribeThread.interrupt();
     }
 
@@ -390,6 +423,7 @@ public class NavigationActivity extends AppCompatActivity
         });
         subscribeThread.start();
     }
+
     private String readFromFile() {
 
         String ret = "";
@@ -397,21 +431,20 @@ public class NavigationActivity extends AppCompatActivity
         try {
             InputStream inputStream = openFileInput("Reccos");
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString + System.lineSeparator());
                 }
 
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
@@ -425,10 +458,11 @@ public class NavigationActivity extends AppCompatActivity
             File path = context.getFilesDir();
             File file = new File(path, "Reccos");
             /*OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(groupname, Context.MODE_PRIVATE));*/
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
                 /*outputStreamWriter.write(data);
-                outputStreamWriter.write(System.lineSeparator());*/ }
+                outputStreamWriter.write(System.lineSeparator());*/
+            }
 
             FileWriter fileWriter = new FileWriter(file, true);
 
@@ -442,8 +476,7 @@ public class NavigationActivity extends AppCompatActivity
             /*outputStreamWriter.append(data);
             outputStreamWriter.append(System.lineSeparator());
             outputStreamWriter.close();*/
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
